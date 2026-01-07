@@ -25,67 +25,107 @@ class AudioProcessor {
   async requestMicrophonePermission() {
     try {
       this.mediaStream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true,
-          autoGainControl: true,
-          sampleRate: this.sampleRate,
-        },
+        audio: true, // Use system defaults to avoid constraint errors
       });
 
       console.log("🎤 Microphone permission granted");
       return true;
     } catch (error) {
-      console.error("Microphone permission denied:", error);
-      throw new Error("Microphone access denied");
+      console.error("Microphone permission error details:", error);
+      console.error("Error name:", error.name);
+      console.error("Error message:", error.message);
+
+      // Pass the specific error name/message to help debugging
+      throw error;
     }
   }
 
-  startCapture(callback) {
+  async startCapture(callback) {
+    console.log('🎤 AudioProcessor.startCapture called, isCapturing:', this.isCapturing);
     if (this.isCapturing) {
       console.warn("Already capturing audio");
       return;
     }
 
     this.captureCallback = callback;
+    console.log('✅ Callback registered');
 
     // Create audio context
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)({
-      sampleRate: this.sampleRate,
-    });
+    // Allow browser to pick native sample rate to avoid hardware mismatch
+    this.audioContext = new (window.AudioContext ||
+      window.webkitAudioContext)();
+    console.log('🔊 AudioContext created, state:', this.audioContext.state);
 
     // Create source from media stream
     this.sourceNode = this.audioContext.createMediaStreamSource(
       this.mediaStream
     );
+    console.log('📡 MediaStreamSource created');
 
-    // Create script processor for capturing audio chunks
-    this.processorNode = this.audioContext.createScriptProcessor(
-      this.chunkSize,
-      1,
-      1
-    );
+    try {
+      // Try to use AudioWorklet (modern API)
+      try {
+        // Load AudioWorklet module (replaces deprecated ScriptProcessorNode)
+        await this.audioContext.audioWorklet.addModule(
+          "/client/audio-capture-worklet.js"
+        );
 
-    this.processorNode.onaudioprocess = (event) => {
-      if (!this.isCapturing) return;
+        // Create AudioWorkletNode
+        this.processorNode = new AudioWorkletNode(
+          this.audioContext,
+          "audio-capture-processor"
+        );
 
-      const inputData = event.inputBuffer.getChannelData(0);
+        // Listen for audio data from worklet
+        this.processorNode.port.onmessage = (event) => {
+          if (!this.isCapturing) return;
 
-      // Convert Float32Array to Int16Array (PCM16)
-      const pcm16 = this.floatTo16BitPCM(inputData);
+          // event.data is ArrayBuffer containing PCM16 data
+          const pcm16 = new Int16Array(event.data);
 
-      // Send to callback
-      if (this.captureCallback) {
-        this.captureCallback(pcm16);
+          // Send to callback
+          if (this.captureCallback) {
+            this.captureCallback(pcm16);
+          }
+        };
+
+        console.log("✅ AudioWorklet loaded successfully");
+      } catch (workletError) {
+        console.warn(
+          "⚠️ AudioWorklet failed, falling back to ScriptProcessorNode:",
+          workletError
+        );
+
+        // Fallback to ScriptProcessorNode (deprecated but works)
+        this.processorNode = this.audioContext.createScriptProcessor(
+          this.chunkSize,
+          1,
+          1
+        );
+
+        this.processorNode.onaudioprocess = (event) => {
+          if (!this.isCapturing) return;
+
+          const inputData = event.inputBuffer.getChannelData(0);
+          const pcm16 = this.floatTo16BitPCM(inputData);
+
+          if (this.captureCallback) {
+            this.captureCallback(pcm16);
+          }
+        };
+        console.log("✅ ScriptProcessorNode fallback initialized");
       }
-    };
 
-    // Connect nodes
-    this.sourceNode.connect(this.processorNode);
-    this.processorNode.connect(this.audioContext.destination);
+      // Connect nodes
+      this.sourceNode.connect(this.processorNode);
+      this.processorNode.connect(this.audioContext.destination);
 
-    this.isCapturing = true;
-    console.log("🎤 Audio capture started");
+      this.isCapturing = true;
+      console.log("🎤 Audio capture started");
+    } catch (error) {
+      console.error("Failed to initialize audio capture:", error);
+      throw error;
+    }
   }
 
   stopCapture() {

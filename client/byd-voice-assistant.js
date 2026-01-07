@@ -3,23 +3,23 @@
  * Embeddable voice assistant for BYD Shark 6 sales
  */
 
-(function() {
-  'use strict';
+(function () {
+  "use strict";
 
   class BYDVoiceAssistant {
     constructor() {
       this.config = {
         serverUrl: window.location.origin,
-        primaryColor: '#d32f2f',
-        position: 'bottom-right',
+        primaryColor: "#d32f2f",
+        position: "bottom-right",
         buttonSize: 60,
         autoOpen: false,
-        mode: 'button'
+        mode: "button",
       };
 
       this.isInitialized = false;
       this.isActive = false;
-      this.state = 'idle';
+      this.state = "idle";
 
       this.uiController = null;
       this.modalController = null;
@@ -33,7 +33,7 @@
       this.config = { ...this.config, ...options };
 
       if (this.isInitialized) {
-        console.warn('BYD Voice Assistant already initialized');
+        console.warn("BYD Voice Assistant already initialized");
         return;
       }
 
@@ -42,21 +42,21 @@
         .then(() => {
           this.initializeComponents();
           this.isInitialized = true;
-          console.log('✅ BYD Voice Assistant initialized');
+          console.log("✅ BYD Voice Assistant initialized");
         })
-        .catch(error => {
-          console.error('Failed to initialize BYD Voice Assistant:', error);
+        .catch((error) => {
+          console.error("Failed to initialize BYD Voice Assistant:", error);
         });
     }
 
     async loadDependencies() {
       // Load required scripts
       const scripts = [
-        '/client/ui-controller.js',
-        '/client/modal-controller.js',
-        '/client/webrtc-client.js',
-        '/client/audio-processor.js',
-        '/client/vad-handler.js'
+        "/client/ui-controller.js",
+        "/client/modal-controller.js",
+        "/client/webrtc-client.js",
+        "/client/audio-processor.js",
+        "/client/vad-handler.js",
       ];
 
       for (const script of scripts) {
@@ -64,7 +64,9 @@
       }
 
       // Load VAD library from CDN
-      await this.loadScript('https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.7/dist/bundle.min.js');
+      await this.loadScript(
+        "https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.7/dist/bundle.min.js"
+      );
     }
 
     loadScript(src) {
@@ -75,7 +77,7 @@
           return;
         }
 
-        const script = document.createElement('script');
+        const script = document.createElement("script");
         script.src = src;
         script.onload = resolve;
         script.onerror = reject;
@@ -85,17 +87,19 @@
 
     initializeComponents() {
       // Initialize UI Controller (button mode)
-      if (this.config.mode === 'button') {
+      if (this.config.mode === "button") {
         this.uiController = new UIController(this.config);
-        this.uiController.on('activate', () => this.activate());
-        this.uiController.on('deactivate', () => this.deactivate());
+        this.uiController.on("activate", () => this.activate());
+        this.uiController.on("deactivate", () => this.deactivate());
       } else {
         // Initialize Modal Controller
         this.modalController = new ModalController(this.config);
         this.modalController.createModal();
-        this.modalController.on('activate', () => this.activate());
-        this.modalController.on('deactivate', () => this.deactivate());
-        this.modalController.on('suggestion', (question) => this.processSuggestion(question));
+        this.modalController.on("activate", () => this.activate());
+        this.modalController.on("deactivate", () => this.deactivate());
+        this.modalController.on("suggestion", (question) =>
+          this.processSuggestion(question)
+        );
       }
 
       // Initialize Audio Processor
@@ -103,15 +107,17 @@
 
       // Initialize WebRTC Client
       this.webrtcClient = new WebRTCClient(this.config.serverUrl);
-      this.webrtcClient.on('audioChunk', (chunk) => this.handleIncomingAudio(chunk));
-      this.webrtcClient.on('stateChange', (state) => this.setState(state));
-      this.webrtcClient.on('transcript', (data) => this.handleTranscript(data));
-      this.webrtcClient.on('error', (message) => this.handleError(message));
+      this.webrtcClient.on("audioChunk", (chunk) =>
+        this.handleIncomingAudio(chunk)
+      );
+      this.webrtcClient.on("stateChange", (state) => this.setState(state));
+      this.webrtcClient.on("transcript", (data) => this.handleTranscript(data));
+      this.webrtcClient.on("error", (message) => this.handleError(message));
 
       // Initialize VAD Handler
       this.vadHandler = new VADHandler();
-      this.vadHandler.on('speechStart', () => this.handleSpeechStart());
-      this.vadHandler.on('speechEnd', () => this.handleSpeechEnd());
+      this.vadHandler.on("speechStart", () => this.handleSpeechStart());
+      this.vadHandler.on("speechEnd", () => this.handleSpeechEnd());
 
       // Auto-open if configured
       if (this.config.autoOpen) {
@@ -120,31 +126,71 @@
     }
 
     async activate() {
-      if (this.isActive) return;
+      console.log('🚀 activate() called, isActive:', this.isActive);
+      if (this.isActive) {
+        console.warn('⚠️ Already active, returning early');
+        return;
+      }
 
       try {
+        console.log('🎤 Requesting microphone permission...');
         // Request microphone permission
         await this.audioProcessor.requestMicrophonePermission();
+        console.log('✅ Microphone permission granted');
 
+        console.log('🔌 Connecting to server...');
         // Connect to server
         await this.webrtcClient.connect();
+        console.log('✅ Connected to server');
 
-        // Start audio capture
-        this.audioProcessor.startCapture((audioChunk) => {
+        // Start audio capture (now async with AudioWorklet)
+        console.log('🎤 Starting audio capture...');
+        await this.audioProcessor.startCapture((audioChunk) => {
+          console.log('🎤 Audio chunk callback fired, sending to WebRTC');
           this.webrtcClient.sendAudioChunk(audioChunk);
         });
+        console.log('✅ Audio capture started successfully');
 
         // Start VAD
         this.vadHandler.start(this.audioProcessor.getAudioStream());
 
         this.isActive = true;
-        this.setState('listening');
+        this.setState("listening");
 
-        console.log('🎤 Voice assistant activated');
-
+        console.log("🎤 Voice assistant activated");
       } catch (error) {
-        console.error('Failed to activate voice assistant:', error);
-        this.uiController.showError('Failed to activate microphone. Please grant permission.');
+        console.error("Failed to activate voice assistant:", error);
+        console.error("Error details:", error.message, error.stack);
+
+        // Show more specific error message
+        let errorMessage = "Failed to activate microphone. ";
+        if (error.message && error.message.includes("AudioWorklet")) {
+          errorMessage = "AudioProcessor Error: " + error.message;
+        } else if (
+          error.name === "NotAllowedError" ||
+          error.name === "PermissionDeniedError"
+        ) {
+          errorMessage =
+            "Microphone access denied. Please allow blocking in address bar.";
+        } else if (
+          error.name === "NotFoundError" ||
+          error.name === "DevicesNotFoundError"
+        ) {
+          errorMessage = "No microphone found.";
+        } else if (
+          error.name === "NotReadableError" ||
+          error.name === "TrackStartError"
+        ) {
+          errorMessage = "Microphone is busy or not readable.";
+        } else if (error.name === "OverconstrainedError") {
+          errorMessage = "Microphone does not satisfy requirements.";
+        } else if (error.message && error.message.includes("timeout")) {
+          errorMessage = "Connection timeout. Check server.";
+        } else {
+          errorMessage = `Error: ${error.name}: ${error.message}`;
+        }
+
+        this.uiController.showError(errorMessage);
         this.deactivate();
       }
     }
@@ -159,9 +205,9 @@
       this.webrtcClient.disconnect();
 
       this.isActive = false;
-      this.setState('idle');
+      this.setState("idle");
 
-      console.log('🛑 Voice assistant deactivated');
+      console.log("🛑 Voice assistant deactivated");
     }
 
     handleIncomingAudio(audioChunk) {
@@ -185,11 +231,11 @@
     }
 
     handleSpeechStart() {
-      if (this.state === 'speaking') {
-        console.log('⚠️ User interruption detected');
+      if (this.state === "speaking") {
+        console.log("⚠️ User interruption detected");
         this.audioProcessor.stopPlayback();
         this.webrtcClient.sendInterruption();
-        this.setState('listening');
+        this.setState("listening");
       }
     }
 
@@ -205,11 +251,11 @@
 
       // Show user message in transcript
       if (this.modalController) {
-        this.modalController.addToTranscript('user', question);
+        this.modalController.addToTranscript("user", question);
       }
 
       // You would send this to the server for processing
-      console.log('Processing suggestion:', question);
+      console.log("Processing suggestion:", question);
     }
 
     setState(newState) {
@@ -225,9 +271,11 @@
 
     // Public API
     open() {
+      console.log('📂 open() called');
       if (this.modalController) {
         this.modalController.open();
       }
+      console.log('🚀 Calling activate() from open()');
       this.activate();
     }
 
@@ -262,5 +310,4 @@
 
   // Create global instance
   window.BYDVoiceAssistant = new BYDVoiceAssistant();
-
 })();

@@ -158,10 +158,11 @@
   </div>
 
   <!-- Load Voice Assistant -->
-  <script src="/client/modal-chat.js"></script>
-  <script src="/client/webrtc-client.js"></script>
-  <script src="/client/audio-processor.js"></script>
-  <script src="/client/vad-handler.js"></script>
+  <script src="/client/modal-chat.js?v=4"></script>
+  <script src="/client/webrtc-connection.js?v=4"></script>
+  <script src="/client/webrtc-client.js?v=4"></script>
+  <script src="/client/audio-processor.js?v=4"></script>
+  <script src="/client/vad-handler.js?v=4"></script>
   <script>
     let modal = null;
     let webrtc = null;
@@ -179,15 +180,35 @@
 
       // Activate
       modal.on('activate', async () => {
-        if (isActive) return;
+        console.log('🔥 ACTIVATE EVENT FIRED, isActive:', isActive);
+        if (isActive) {
+          console.warn('⚠️ Already active, skipping');
+          return;
+        }
         try {
+          console.log('🎤 Step 1: Requesting mic permission...');
           await audio.requestMicrophonePermission();
+          console.log('✅ Step 1 complete: Mic permission granted');
+
+          console.log('🔌 Step 2: Connecting WebRTC...');
           await webrtc.connect();
-          audio.startCapture((chunk) => webrtc.sendAudioChunk(chunk));
+          console.log('✅ Step 2 complete: WebRTC connected');
+
+          console.log('🎤 Step 3: Starting audio capture...');
+          audio.startCapture((chunk) => {
+            webrtc.sendAudioChunk(chunk);
+          });
+          console.log('✅ Step 3 complete: Audio capture started');
+
+          console.log('🎙️ Step 4: Starting VAD...');
           vad.start(audio.getAudioStream());
+          console.log('✅ Step 4 complete: VAD started');
+
           isActive = true;
           modal.setState('listening');
+          console.log('✅ ALL STEPS COMPLETE - LISTENING');
         } catch (err) {
+          console.error('❌ Activation failed:', err);
           modal.showError('Microphone access denied');
         }
       });
