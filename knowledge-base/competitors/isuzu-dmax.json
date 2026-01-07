@@ -1,0 +1,43 @@
+{
+  "vehicle": "Isuzu D-Max",
+  "variant": "LS-U 4x4",
+  "specs": {
+    "engine": "3.0L 4-cylinder Turbo Diesel",
+    "power": "140 kW (190 HP)",
+    "torque": "450 Nm",
+    "transmission": "6-speed Automatic",
+    "drivetrain": "4WD",
+    "fuelType": "Diesel",
+    "fuelConsumption": "8.1L/100km",
+    "towingCapacity": "3,500 kg",
+    "payload": "955 kg",
+    "price": "$58,500 AUD"
+  },
+  "features": [
+    "9-inch touchscreen",
+    "Apple CarPlay & Android Auto",
+    "Reverse camera",
+    "Adaptive cruise control",
+    "Autonomous emergency braking",
+    "LED headlights",
+    "Leather seats"
+  ],
+  "pros": [
+    "Strong and durable build",
+    "Good towing capacity (3,500 kg)",
+    "Higher payload capacity (955 kg)",
+    "Smooth diesel engine",
+    "Comfortable interior",
+    "Competitive pricing"
+  ],
+  "cons": [
+    "Higher purchase price ($58,500 vs Shark 6 $49,990)",
+    "No electric capability",
+    "Higher running costs (diesel)",
+    "Basic technology compared to Shark 6",
+    "No hybrid efficiency",
+    "Higher emissions",
+    "Traditional interior design",
+    "No vehicle-to-load feature"
+  ]
+}

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BYD Shark 6 - Voice Assistant Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #d32f2f;
+    }
+
+    .tagline {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .hero {
+      text-align: center;
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero p {
+      font-size: 20px;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: white;
+      color: #667eea;
+      padding: 15px 40px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .feature-card h3 {
+      color: #667eea;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    .feature-card p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .specs-section {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 15px;
+      margin-top: 40px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .specs-section h2 {
+      color: #667eea;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .spec-item {
+      padding: 15px;
+      border-left: 3px solid #d32f2f;
+      background: #f9f9f9;
+    }
+
+    .spec-item strong {
+      color: #333;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .spec-item span {
+      color: #666;
+    }
+
+    footer {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 20px 0;
+      text-align: center;
+      color: #666;
+    }
+
+    .voice-indicator {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      display: none;
+    }
+
+    .voice-indicator.active {
+      display: block;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 32px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div>
+          <div class="logo">BYD Shark 6</div>
+          <div class="tagline">The Future of Pickup Trucks</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="hero">
+        <h1>Experience the BYD Shark 6</h1>
+        <p>Plug-in Hybrid Electric Pickup with 430 HP and 800+ km Range</p>
+        <a href="#" class="cta-button" onclick="activateVoiceAssistant(event)">
+          Ask Our Voice Assistant
+        </a>
+
+        <div class="features">
+          <div class="feature-card">
+            <h3>Powerful Hybrid</h3>
+            <p>430 HP combined power with 650 Nm torque. 0-100 km/h in just 5.7 seconds.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>Long Range</h3>
+            <p>100 km pure electric range plus 800+ km total range. No range anxiety.</p>
+          </div>
+
+          <div class="feature-card">
+            <h3>Advanced Tech</h3>
+            <p>12.8" rotating touchscreen, DiLink 4.0, and over-the-air updates.</p>
+          </div>
+        </div>
+
+        <div class="specs-section">
+          <h2>Key Specifications</h2>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <strong>Power</strong>
+              <span>430 HP (321 kW)</span>
+            </div>
+            <div class="spec-item">
+              <strong>Torque</strong>
+              <span>650 Nm</span>
+            </div>
+            <div class="spec-item">
+              <strong>Towing Capacity</strong>
+              <span>2,500 kg</span>
+            </div>
+            <div class="spec-item">
+              <strong>Electric Range</strong>
+              <span>100 km</span>
+            </div>
+            <div class="spec-item">
+              <strong>Total Range</strong>
+              <span>800+ km</span>
+            </div>
+            <div class="spec-item">
+              <strong>Price</strong>
+              <span>From $49,990 AUD</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="voice-indicator" id="voiceIndicator">
+    <strong>Voice Assistant Ready</strong>
+    <p>Click the button to start talking</p>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2024 BYD Shark 6. All rights reserved. | Voice Assistant Demo</p>
+    </div>
+  </footer>
+
+  <!-- Load BYD Voice Assistant Widget -->
+  <script src="/client/byd-voice-assistant.js"></script>
+  <script>
+    // Initialize the voice assistant widget in BUTTON mode
+    BYDVoiceAssistant.init({
+      primaryColor: '#d32f2f',
+      position: 'bottom-right',
+      buttonSize: 60,
+      autoOpen: false,
+      mode: 'button'  // Floating button mode
+    });
+
+    function activateVoiceAssistant(event) {
+      event.preventDefault();
+      BYDVoiceAssistant.open();
+
+      // Show indicator
+      const indicator = document.getElementById('voiceIndicator');
+      indicator.classList.add('active');
+
+      setTimeout(() => {
+        indicator.classList.remove('active');
+      }, 3000);
+    }
+
+    console.log('📱 Button Demo Page Loaded');
+  </script>
+
+  <div style="position: fixed; bottom: 80px; right: 30px; background: rgba(255,255,255,0.95); padding: 15px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 250px; font-size: 14px; color: #333;">
+    <strong>💡 Tip:</strong> Try the <a href="/demo-modal" style="color: #d32f2f; text-decoration: underline;">Modal Version</a> for a full-screen experience!
+  </div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "vehicle": "Mitsubishi Triton",
+  "variant": "GLS 4x4",
+  "specs": {
+    "engine": "2.4L 4-cylinder Turbo Diesel",
+    "power": "133 kW (181 HP)",
+    "torque": "430 Nm",
+    "transmission": "6-speed Automatic",
+    "drivetrain": "4WD",
+    "fuelType": "Diesel",
+    "fuelConsumption": "8.6L/100km",
+    "towingCapacity": "3,100 kg",
+    "payload": "915 kg",
+    "price": "$54,990 AUD"
+  },
+  "features": [
+    "9-inch touchscreen",
+    "Apple CarPlay & Android Auto",
+    "360-degree camera",
+    "Blind spot monitoring",
+    "Rear cross traffic alert",
+    "LED headlights",
+    "Leather seats"
+  ],
+  "pros": [
+    "Value for money",
+    "Good safety features",
+    "Comfortable ride",
+    "Decent towing capacity (3,100 kg)",
+    "Comprehensive warranty",
+    "Modern styling"
+  ],
+  "cons": [
+    "Higher price than Shark 6 ($54,990 vs $49,990)",
+    "No electric or hybrid option",
+    "Higher running costs (diesel)",
+    "Less powerful than Shark 6 (181 HP vs 430 HP)",
+    "Lower torque (430 Nm vs 650 Nm)",
+    "No advanced tech like rotating screen",
+    "Higher emissions",
+    "No V2L capability"
+  ]
+}

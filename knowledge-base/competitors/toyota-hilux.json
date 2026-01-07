@@ -1,0 +1,41 @@
+{
+  "vehicle": "Toyota Hilux",
+  "variant": "SR5 4x4",
+  "specs": {
+    "engine": "2.8L 4-cylinder Turbo Diesel",
+    "power": "150 kW (204 HP)",
+    "torque": "500 Nm",
+    "transmission": "6-speed Automatic",
+    "drivetrain": "4WD",
+    "fuelType": "Diesel",
+    "fuelConsumption": "8.5L/100km",
+    "towingCapacity": "3,500 kg",
+    "payload": "865 kg",
+    "price": "$62,990 AUD"
+  },
+  "features": [
+    "Toyota Safety Sense",
+    "8-inch touchscreen",
+    "Apple CarPlay & Android Auto",
+    "Reverse camera",
+    "Cruise control",
+    "Automatic climate control",
+    "LED headlights"
+  ],
+  "pros": [
+    "Legendary reliability",
+    "Excellent resale value",
+    "Widespread service network",
+    "Proven off-road capability",
+    "Higher towing capacity (3,500 kg)"
+  ],
+  "cons": [
+    "Higher purchase price ($62,990 vs Shark 6 $49,990)",
+    "Higher running costs (diesel fuel)",
+    "Less advanced technology",
+    "No electric driving capability",
+    "Higher emissions",
+    "Firm ride quality",
+    "Basic interior compared to Shark 6"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "vehicle": "Ford Ranger",
+  "variant": "XLT 4x4",
+  "specs": {
+    "engine": "2.0L Bi-Turbo Diesel",
+    "power": "154 kW (210 HP)",
+    "torque": "500 Nm",
+    "transmission": "10-speed Automatic",
+    "drivetrain": "4WD",
+    "fuelType": "Diesel",
+    "fuelConsumption": "8.2L/100km",
+    "towingCapacity": "3,500 kg",
+    "payload": "869 kg",
+    "price": "$61,690 AUD"
+  },
+  "features": [
+    "SYNC 4 infotainment with 12-inch screen",
+    "Apple CarPlay & Android Auto (wireless)",
+    "360-degree camera",
+    "Adaptive cruise control",
+    "Lane keeping assist",
+    "Matrix LED headlights",
+    "FordPass Connect"
+  ],
+  "pros": [
+    "Modern design and styling",
+    "Advanced infotainment system",
+    "Comfortable ride",
+    "Strong towing capacity (3,500 kg)",
+    "Good safety features",
+    "Efficient 10-speed transmission"
+  ],
+  "cons": [
+    "Higher purchase price ($61,690 vs Shark 6 $49,990)",
+    "No electric driving capability",
+    "Higher running costs (diesel)",
+    "Diesel particulate filter (DPF) issues reported",
+    "No vehicle-to-load capability",
+    "Higher emissions than PHEV",
+    "Can be expensive to service"
+  ]
+}
